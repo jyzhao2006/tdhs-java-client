@@ -22,7 +22,7 @@ public final class TDHSCommon {
 
     public static final int REQUEST_MAX_FIELD_NUM = 256;
 
-    public static final int REQUEST_MAX_KEY_NUM = 10;
+    public static final int REQUEST_MAX_KEY_NUM = 100;
 
     public static final TDHSProtocol PROTOCOL_FOR_BINARY = new TDHSProtocolBinary();
 
