@@ -56,7 +56,8 @@ public class TDHSClientImpl implements TDHSClient {
     private String charsetName;
 
     private boolean lowerCaseTableNames;
-
+    
+    public String dbName;
 
     /**
      * Constructor TDHSClientImpl creates a new TDHSClientImpl instance.
@@ -428,6 +429,10 @@ public class TDHSClientImpl implements TDHSClient {
      * @return Query
      */
     public Query query() {
+    	if(dbName != null)
+    	{
+    		return createStatement().query().use(dbName);
+    	}
         return createStatement().query();
     }
 
@@ -437,6 +442,10 @@ public class TDHSClientImpl implements TDHSClient {
      * @return Insert
      */
     public com.taobao.tdhs.client.easy.Insert insert() {
+    	if(dbName != null)
+    	{
+    		return createStatement().insert().use(dbName);
+    	}
         return createStatement().insert();
     }
 
@@ -446,5 +455,13 @@ public class TDHSClientImpl implements TDHSClient {
     public void shutdown() {
         tdhsNet.release();
     }
+
+	public String getDbName() {
+		return dbName;
+	}
+
+	public void setDbName(String dbName) {
+		this.dbName = dbName;
+	}
 
 }
