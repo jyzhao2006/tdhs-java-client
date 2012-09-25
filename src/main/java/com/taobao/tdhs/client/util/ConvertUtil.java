@@ -29,6 +29,7 @@ import java.util.TimeZone;
  */
 public final class ConvertUtil {
 
+	public static ThreadLocal<DateFormat> dateFormatTheadLocal = new ThreadLocal<DateFormat>();
     public static String toHex(byte b) {
         return ("" + "0123456789ABCDEF".charAt(0xf & b >> 4) + "0123456789ABCDEF"
                 .charAt(b & 0xf));
@@ -229,11 +230,18 @@ public final class ConvertUtil {
         }
         
         DateFormat dateFormat;
-        if (val.length() == "yyyy-MM-dd".length()) {
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        } else {
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
+        dateFormat = dateFormatTheadLocal.get();
+        if(dateFormat == null)
+        {
+            if (val.length() == "yyyy-MM-dd".length()) {
+                dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            } else {
+                dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            }
+            dateFormatTheadLocal.set(dateFormat);
         }
+
         if (cal != null) {
             TimeZone timeZone = cal.getTimeZone();
             dateFormat.setTimeZone(timeZone);

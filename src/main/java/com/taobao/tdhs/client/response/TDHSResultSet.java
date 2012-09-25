@@ -27,7 +27,7 @@ import java.util.*;
  */
 public class TDHSResultSet implements ResultSet {
 
-    private final Map<String, Integer> fieldMap = new HashMap<String, Integer>();
+    private final Map<String, Integer> fieldMap;
 
     private final List<TDHSResponseEnum.IFieldType> fieldTypes;
 
@@ -57,13 +57,17 @@ public class TDHSResultSet implements ResultSet {
      */
     public TDHSResultSet(List<String> alias, TDHSMetaData metaData, List<TDHSResponseEnum.IFieldType> fieldTypes,
                          List<List<byte[]>> fieldData, String charsetName) {
+
         if (alias != null) {
+       	 fieldMap = new HashMap<String, Integer>(alias.size());
             int i = 1;
             for (String f : alias) {
-                fieldMap.put(f.toLowerCase(), i);
-                fieldMap.put(f.toUpperCase(), i);
-                fieldMap.put(f, i++);
+                fieldMap.put(f.toUpperCase(), i++);
             }
+        }
+        else
+        {
+        	fieldMap = new HashMap<String, Integer>();
         }
         this.alias = alias;
         this.metaData = metaData;
@@ -729,11 +733,12 @@ public class TDHSResultSet implements ResultSet {
      * @throws SQLException when
      */
     public int findColumn(String columnLabel) throws SQLException {
-        if (!fieldMap.containsKey(columnLabel)) {
+        Integer index =  fieldMap.get(columnLabel == null?columnLabel:columnLabel.toUpperCase());
+        if (null == index) {
             throw new SQLException("columnLabel " + columnLabel
                     + " is not in result set");
         }
-        return fieldMap.get(columnLabel);
+        return index;
     }
 
     /**
